@@ -7,7 +7,7 @@ Implementation of the pretraining pipeline for S-PLM-v1, including data processi
 2. Run the preprocessing pipeline:
 ```bash
    bash pipeline.sh
-
+```
 ## pre-training
 Modify **data_path** in config files and run: 
 ```r
