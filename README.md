@@ -8,7 +8,7 @@ Implementation of the pretraining pipeline for S-PLM-v1, including data processi
 ```bash
    bash pipeline.sh
 ```
-## pre-training
+## Pre-training for S-PLM-v1
 Modify **data_path** in config files and run: 
 ```r
 python train.py --config_path ./configs/config_16adapter.yaml
