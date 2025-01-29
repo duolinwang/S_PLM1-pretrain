@@ -1,0 +1,101 @@
+fix_seed: 0
+checkpoints_every: 10000 #don't save any checkpoint
+tensorboard_log: True
+result_path: ./results
+
+resume:
+  resume: False
+  resume_path: ///
+  restart_optimizer: True
+
+model:
+  out_dim: 256
+  num_projector: 2
+  memory_banck: 
+      enable: False
+      K: 32
+  
+  esm_encoder:
+    model_name:  esm2_t33_650M_UR50D # esm2_t33_650M_UR50D, esm2_t30_150M_UR50D, esm2_t12_35M_UR50D, esm2_t6_8M_UR50D
+    max_length: 512
+    inner_dim: 4096
+    tune_ESM_table: False
+    fine_tuning:
+      enable: False
+      unfix_last_layer: 4
+    adapter_h:
+      enable: True
+      num_end_adapter_layers: 16
+      module_type: "MLP1"
+    lora:
+      enable: False
+      r: 8
+      alpha: 32
+      dropout: 0.05
+      resume:
+        enable: False
+        checkpoint_path: path/to/checkpoints.pth
+    pool_mode: 2 #average pooling without padding
+    MLM: 
+       enable: False
+       mask_ratio: 0.15
+       alt: False
+       mode: "contrast" #"contrast" or "predict"
+  
+  swin_encoder:
+    model_name: microsoft/swinv2-tiny-patch4-window8-256 # microsoft/swinv2-tiny-patch4-window8-256, microsoft/swinv2-base-patch4-window12-192-22k, microsoft/swinv2-large-patch4-window12-192-22k
+    inner_dim: 4096
+    tune_swin_table: True
+    unfixswin_last_layer: 4
+    lora:
+      enable: False
+      r: 8
+      alpha: 32
+      dropout: 0.05
+      resume:
+        enable: False
+        checkpoint_path: path/to/checkpoints.pth
+
+train_settings:
+  data_path: /cluster/pixstor/xudong-lab/duolin/swiss-pos-contact-512/swiss-pro-pdbxyz-{1..1080}.tar
+  num_steps: 20000 #0
+  shuffle: True
+  mixed_precision: True
+  device: cuda
+  batch_size: 20
+  num_workers: 0
+  gradient_accumulation: 1
+  length_range: 25
+  same_diff_ratio: -1 #whether to control sequence length for training
+  rescale: 0 #whether to rescale the image or average pooling of the image?
+  n_views: 2
+  temperature: 0.05
+  contactmethod:
+    name: contact_3Dchannel_v2
+    dist1: 22.0
+    dist2: 22.0
+    dist3: 22.0
+
+valid_settings:
+  data_path: /cluster/pixstor/xudong-lab/duolin/swiss-pos-contact-512/swiss-pro-pdbxyz-{1081..1083}.tar
+  do_every: 500 # steps
+  num_workers: 0
+
+optimizer:
+  name: sgd
+  lr_seq: 0.001
+  lr_struct: 0.001
+  weight_decouple: True
+  weight_decay: 0.0005
+  eps: 1e-16
+  beta_1: 0.9
+  beta_2: 0.999
+  use_8bit_adam: False
+  grad_clip_norm: 1
+  decay:
+    warmup: 10
+    min_lr_seq: 0
+    min_lr_struct: 0
+    gamma: 1
+    num_restarts: 1
+    first_cycle_steps: 100
