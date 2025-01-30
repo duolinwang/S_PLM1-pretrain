@@ -3,8 +3,8 @@ Pretraining code for S-PLM-v1
 Implementation of the pretraining pipeline for S-PLM-v1, including data processing and training loop.
 
 ## Data processing
-1. Download protein structures in **PDB format** from [AlphaFold DB](https://alphafold.ebi.ac.uk/).
-2. Run the preprocessing pipeline:
+1. Download protein structures (Swiss-Prot (PDB files)) in **PDB format** from [AlphaFold DB](https://alphafold.ebi.ac.uk/download).
+2. Run the preprocessing pipeline in the folder make_webdataset:
 ```bash
    bash pipeline.sh
 ```
